@@ -3,6 +3,8 @@ from utils.database import db
 from flask_migrate import Migrate
 import os
 import sqlite3
+import os
+import sqlite3
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
@@ -30,3 +32,16 @@ with app.app_context():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+db_path = os.path.join(os.path.dirname(__file__), "db.sqlite3")
+sql_path = os.path.join(os.path.dirname(__file__), "data.sql")
+
+if not os.path.exists(db_path):
+    print("Creando base de datos inicial...")
+    conn = sqlite3.connect(db_path)
+    with open(sql_path, "r", encoding="utf-8") as f:
+        conn.executescript(f.read())
+    conn.close()
+    print("Base creada correctamente ✅")
+
